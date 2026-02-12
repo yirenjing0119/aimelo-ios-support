@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aimelo Support</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h1 { color: #6B46C1; }
+    </style>
+</head>
+<body>
+    <h1>Aimelo Support</h1>
+    <p>Need help with Aimelo? We're here to help!</p>
+    
+    <h2>Contact Us</h2>
+    <p>Email: <a href="mailto:yirenjing0119@gmail.com">yirenjing0119@gmail.com</a></p>
+    
+    <h2>Frequently Asked Questions</h2>
+    
+    <h3>How do I use the pitch detection?</h3>
+    <p>Allow microphone access when prompted, then play your clarinet. Aimelo will show real-time pitch feedback.</p>
+    
+    <h3>How do I use the posture detection?</h3>
+    <p>Allow camera access when prompted, then position yourself in view while playing.</p>
+    
+    <h3>How do I track my progress?</h3>
+    <p>Your practice sessions are automatically saved. View your calendar and statistics in the Progress tab.</p>
+    
+    <h2>Report a Bug</h2>
+    <p>Found an issue? Please email us with details: yirenjing0119@gmail.com</p>
+</body>
+</html>
