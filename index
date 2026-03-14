@@ -1,36 +1,731 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Aimelo Support</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aimelo — Wind Instrument Tutor</title>
+    <meta name="description" content="Aimelo is a free AI-powered app that gives wind instrument students real-time feedback on posture, pitch, and rhythm accuracy.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --purple-deep: #5B4FC4;
+            --purple-mid: #7C6FD9;
+            --purple-light: #B8B0E8;
+            --purple-wash: #E8E4F8;
+            --purple-ghost: #F4F2FC;
+            --lavender-bg: #C5BEE8;
+            --white: #FFFFFF;
+            --off-white: #FAFAFE;
+            --text-primary: #1A1633;
+            --text-secondary: #5A5478;
+            --text-muted: #8E87A8;
+            --accent-orange: #F5954F;
         }
-        h1 { color: #6B46C1; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--off-white);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* === NAV === */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(250, 250, 254, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(91, 79, 196, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--purple-deep);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-logo span {
+            color: var(--accent-orange);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--purple-deep); }
+
+        .nav-cta {
+            background: var(--purple-deep) !important;
+            color: var(--white) !important;
+            padding: 0.6rem 1.4rem;
+            border-radius: 100px;
+            font-weight: 600 !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(91, 79, 196, 0.3);
+        }
+
+        /* === HERO === */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(165deg, var(--off-white) 0%, var(--purple-ghost) 40%, var(--purple-wash) 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(91, 79, 196, 0.08) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(245, 149, 79, 0.06) 0%, transparent 70%);
+            bottom: -50px;
+            left: -50px;
+            border-radius: 50%;
+        }
+
+        .hero-inner {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text { max-width: 540px; }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--white);
+            border: 1px solid var(--purple-wash);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--purple-deep);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(91, 79, 196, 0.06);
+        }
+
+        .hero-badge::before {
+            content: '♪';
+            font-size: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.5rem, 5vw, 3.8rem);
+            line-height: 1.1;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.2rem;
+            color: var(--text-primary);
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--purple-deep);
+        }
+
+        .hero-desc {
+            font-size: 1.15rem;
+            line-height: 1.65;
+            color: var(--text-secondary);
+            margin-bottom: 2.2rem;
+            max-width: 460px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--purple-deep);
+            color: var(--white);
+            padding: 0.9rem 2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(91, 79, 196, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 28px rgba(91, 79, 196, 0.35);
+        }
+
+        .btn-primary svg { width: 20px; height: 20px; }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.9rem 1.2rem;
+            transition: color 0.2s;
+        }
+
+        .btn-secondary:hover { color: var(--purple-deep); }
+
+        .hero-price {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .hero-phone {
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-phone img {
+            width: 100%;
+            max-width: 380px;
+            border-radius: 20px;
+            filter: drop-shadow(0 20px 60px rgba(91, 79, 196, 0.15));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        /* === FEATURES === */
+        .features {
+            padding: 7rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--purple-deep);
+            margin-bottom: 0.8rem;
+        }
+
+        .section-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 560px;
+            margin-bottom: 3.5rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border: 1px solid rgba(91, 79, 196, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(91, 79, 196, 0.1);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            background: var(--purple-ghost);
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        /* === SCREENSHOTS === */
+        .screenshots {
+            padding: 5rem 0 7rem;
+            background: linear-gradient(180deg, var(--off-white) 0%, var(--purple-ghost) 50%, var(--off-white) 100%);
+            overflow: hidden;
+        }
+
+        .screenshots-header {
+            text-align: center;
+            padding: 0 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .scroll-track {
+            display: flex;
+            gap: 1.5rem;
+            padding: 0 2rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .scroll-track::-webkit-scrollbar { display: none; }
+
+        .screenshot-item {
+            flex: 0 0 auto;
+            width: 280px;
+            scroll-snap-align: center;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(91, 79, 196, 0.12);
+            transition: transform 0.3s;
+        }
+
+        .screenshot-item:first-child { margin-left: calc(50vw - 500px); }
+        .screenshot-item:last-child { margin-right: calc(50vw - 500px); }
+
+        .screenshot-item:hover { transform: scale(1.03); }
+
+        .screenshot-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* === MISSION === */
+        .mission {
+            padding: 7rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .mission-quote {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.5;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .mission-quote em {
+            color: var(--purple-deep);
+            font-style: italic;
+        }
+
+        .mission-attribution {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .mission-divider {
+            width: 48px;
+            height: 3px;
+            background: var(--purple-light);
+            border-radius: 100px;
+            margin: 2rem auto;
+        }
+
+        .mission p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        /* === PARTNERS === */
+        .partners {
+            padding: 4rem 2rem 7rem;
+            text-align: center;
+        }
+
+        .partners-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .partners-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .partner-item {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-muted);
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .partner-item:hover { opacity: 1; }
+
+        /* === CTA === */
+        .cta {
+            padding: 6rem 2rem;
+            text-align: center;
+            background: linear-gradient(165deg, var(--purple-deep) 0%, #4A3FB0 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+            top: -200px;
+            right: -100px;
+            border-radius: 50%;
+        }
+
+        .cta h2 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .btn-white {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--white);
+            color: var(--purple-deep);
+            padding: 1rem 2.2rem;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        /* === FOOTER === */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: var(--text-primary);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover { color: var(--white); }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 900px) {
+            .hero-inner {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+            .hero-text { max-width: 100%; }
+            .hero-desc { max-width: 100%; margin-left: auto; margin-right: auto; }
+            .hero-actions { justify-content: center; }
+            .hero-phone { order: -1; }
+            .hero-phone img { max-width: 280px; }
+            .features-grid { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; }
+            .screenshot-item:first-child { margin-left: 2rem; }
+            .screenshot-item:last-child { margin-right: 2rem; }
+            .nav-links { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 7rem 1.2rem 3rem; }
+            .features { padding: 4rem 1.2rem; }
+            .screenshot-item { width: 240px; }
+        }
+
+        /* === ANIMATIONS === */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
-    <h1>Aimelo Support</h1>
-    <p>Need help with Aimelo? We're here to help!</p>
-    
-    <h2>Contact Us</h2>
-    <p>Email: <a href="mailto:yirenjing0119@gmail.com">yirenjing0119@gmail.com</a></p>
-    
-    <h2>Frequently Asked Questions</h2>
-    
-    <h3>How do I use the pitch detection?</h3>
-    <p>Allow microphone access when prompted, then play your clarinet. Aimelo will show real-time pitch feedback.</p>
-    
-    <h3>How do I use the posture detection?</h3>
-    <p>Allow camera access when prompted, then position yourself in view while playing.</p>
-    
-    <h3>How do I track my progress?</h3>
-    <p>Your practice sessions are automatically saved. View your calendar and statistics in the Progress tab.</p>
-    
-    <h2>Report a Bug</h2>
-    <p>Found an issue? Please email us with details: yirenjing0119@gmail.com</p>
+
+<!-- NAV -->
+<nav>
+    <a href="#" class="nav-logo">Aimelo<span>.</span></a>
+    <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#screenshots">Screenshots</a></li>
+        <li><a href="#mission">Mission</a></li>
+        <li><a href="https://apps.apple.com/us/app/aimelo-wind-instrument-tutor/id6758561453" class="nav-cta" target="_blank">Download Free</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-text">
+            <div class="hero-badge">Free on the App Store</div>
+            <h1>Practice smarter with <em>real-time</em> feedback</h1>
+            <p class="hero-desc">Aimelo gives wind instrument students AI-powered feedback on pitch, rhythm, and posture — like having a private tutor in your pocket.</p>
+            <div class="hero-actions">
+                <a href="https://apps.apple.com/us/app/aimelo-wind-instrument-tutor/id6758561453" class="btn-primary" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    Download for iOS
+                </a>
+                <a href="#features" class="btn-secondary">See features ↓</a>
+            </div>
+            <p class="hero-price">100% free. No ads. No subscriptions.</p>
+        </div>
+        <div class="hero-phone">
+            <img src="screenshots/6.png" alt="Aimelo app showing practice calendar and streak tracking">
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+    <div class="fade-up">
+        <p class="section-label">Features</p>
+        <h2 class="section-title">Everything you need to<br>practice with confidence</h2>
+        <p class="section-desc">Aimelo combines AI-powered feedback with smart practice tools to help you improve faster — even without a teacher present.</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card fade-up">
+            <div class="feature-icon">🎯</div>
+            <h3>Real-Time Pitch Detection</h3>
+            <p>See exactly which note you're playing with instant visual feedback. Know immediately when you're sharp, flat, or right on target.</p>
+        </div>
+        <div class="feature-card fade-up">
+            <div class="feature-icon">📸</div>
+            <h3>AI Posture Analysis</h3>
+            <p>Get real-time feedback on your playing posture using your phone's camera. Build proper technique from day one.</p>
+        </div>
+        <div class="feature-card fade-up">
+            <div class="feature-icon">🎼</div>
+            <h3>Sheet Music Upload</h3>
+            <p>Scan or upload your own sheet music. Aimelo extracts the notes so you can practice along with guided feedback on accuracy.</p>
+        </div>
+        <div class="feature-card fade-up">
+            <div class="feature-icon">📊</div>
+            <h3>Progress Tracking</h3>
+            <p>View daily accuracy charts, practice streaks, and session history. Watch your improvement over time with clear data.</p>
+        </div>
+        <div class="feature-card fade-up">
+            <div class="feature-icon">🎵</div>
+            <h3>Long Tone Practice</h3>
+            <p>Build embouchure strength and breath control with an engaging bubble game that makes fundamentals fun.</p>
+        </div>
+        <div class="feature-card fade-up">
+            <div class="feature-icon">🥁</div>
+            <h3>Built-In Metronome</h3>
+            <p>Keep time with an adjustable metronome built right into the app. Practice rhythm accuracy alongside pitch.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SCREENSHOTS -->
+<section class="screenshots" id="screenshots">
+    <div class="screenshots-header fade-up">
+        <p class="section-label">See it in action</p>
+        <h2 class="section-title">Designed for real practice sessions</h2>
+    </div>
+    <div class="scroll-track">
+        <div class="screenshot-item"><img src="screenshots/6.png" alt="Practice stats and streak calendar" loading="lazy"></div>
+        <div class="screenshot-item"><img src="screenshots/5.png" alt="Guided practice with note accuracy" loading="lazy"></div>
+        <div class="screenshot-item"><img src="screenshots/2.png" alt="Long tones bubble game" loading="lazy"></div>
+        <div class="screenshot-item"><img src="screenshots/1.png" alt="Progress tracking and daily accuracy" loading="lazy"></div>
+        <div class="screenshot-item"><img src="screenshots/7.png" alt="Upload sheet music" loading="lazy"></div>
+        <div class="screenshot-item"><img src="screenshots/3.png" alt="My Music library" loading="lazy"></div>
+        <div class="screenshot-item"><img src="screenshots/4.png" alt="Detailed guidance for beginners" loading="lazy"></div>
+    </div>
+</section>
+
+<!-- MISSION -->
+<section class="mission" id="mission">
+    <div class="fade-up">
+        <p class="section-label">Our Mission</p>
+        <p class="mission-quote">"Every student deserves quality practice feedback — not just those who can afford <em>private lessons</em>."</p>
+        <p class="mission-attribution">Yiren Jing, Founder — Arlington High School, MA</p>
+        <div class="mission-divider"></div>
+        <p>Aimelo was created by a high school clarinetist who saw firsthand how students without access to private instruction struggle to improve on their own. The app is and always will be completely free — because access to quality music education shouldn't depend on what you can afford.</p>
+    </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="partners fade-up">
+    <p class="partners-label">Trusted By</p>
+    <div class="partners-logos">
+        <span class="partner-item">Save the Music Foundation</span>
+        <span class="partner-item">Berklee ABLE Assembly '26</span>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+    <h2>Start practicing smarter today</h2>
+    <p>Download Aimelo for free and get real-time feedback on your pitch, rhythm, and posture every time you practice.</p>
+    <a href="https://apps.apple.com/us/app/aimelo-wind-instrument-tutor/id6758561453" class="btn-white" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Download for iOS — Free
+    </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-links">
+        <a href="https://apps.apple.com/us/app/aimelo-wind-instrument-tutor/id6758561453" target="_blank">App Store</a>
+        <a href="https://www.termsfeed.com/live/bd9696c2-77b7-41fc-b60d-bf921a715eee" target="_blank">Privacy Policy</a>
+        <a href="mailto:yirenjing0119@gmail.com">Contact</a>
+    </div>
+    <p>&copy; 2026 Aimelo. Created by Yiren Jing.</p>
+</footer>
+
+<script>
+    // Intersection Observer for fade-up animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
 </body>
 </html>
