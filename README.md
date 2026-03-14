@@ -4,7 +4,7 @@ Official support page for **Aimelo** - Your Personal Clarinet Practice Assistant
 
 ## About Aimelo
 
-Aimelo is a free, AI-powered iOS app that helps clarinet students practice more effectively with real-time feedback on pitch accuracy and posture.
+Aimelo is a free iOS app that helps clarinet students practice more effectively with real-time feedback on pitch accuracy and posture.
 
 **Available on:** iOS (App Store)
 
